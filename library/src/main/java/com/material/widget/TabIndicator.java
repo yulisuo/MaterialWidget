@@ -695,14 +695,14 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
         public void onPageSelected(int position) {
             TabIndicator.this.animatedSelectCurrentTab(position);
             if (mOnPageChangeListener != null) {
-                mOnPageChangeListener.onPageScrollStateChanged(position);
+                mOnPageChangeListener.onPageSelected(position);
             }
         }
 
         @Override
         public void onPageScrollStateChanged(int state) {
             if (mOnPageChangeListener != null) {
-                mOnPageChangeListener.onPageSelected(state);
+                mOnPageChangeListener.onPageScrollStateChanged(state);
             }
         }
     }

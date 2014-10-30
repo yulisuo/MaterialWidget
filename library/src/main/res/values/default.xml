@@ -70,4 +70,22 @@
     <dimen name="circular_progress_normal_size">48dp</dimen>
     <dimen name="circular_progress_large_size">60dp</dimen>
     <integer name="circular_progress_max">100</integer>
+
+    <!-- LinearProgress Default -->
+    <color name="linear_progress_color">#ff3f51b5</color>
+    <dimen name="linear_progress_line_width">4dp</dimen>
+    <integer name="linear_progress_max">100</integer>
+
+    <!-- Slider Default -->
+    <color name="slider_color">#ff3f51b5</color>
+    <color name="slider_track_color">#ffc8c8c8</color>
+    <color name="slider_ripple_color">#ffd4d4d4</color>
+    <dimen name="slider_height">48dp</dimen>
+    <dimen name="slider_thumb_radius">7dp</dimen>
+    <dimen name="slider_thumb_selected_radius">12dp</dimen>
+    <dimen name="slider_thumb_border_width">2dp</dimen>
+    <integer name="slider_max">100</integer>
+    <dimen name="slider_track_height">2dp</dimen>
+
+    <!-- FloatingEditText Default -->
 </resources>

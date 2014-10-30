@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pre-dex-items>
+
+    <item
+        dex="/Users/Keith/Dropbox/Project/java/Current/MaterialWidget/sample/build/intermediates/pre-dexed/debug/support-annotations-21.0.0-98490cb80360783d814246d0a190faaf32728efa.jar"
+        jar="/Users/Keith/DevelopTool/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.0/support-annotations-21.0.0.jar"
+        jumboMode="false"
+        revision="21.0.1"
+        sha1="1a578b9607b36266c63d43a4fa0ab5664dbe911e"/>
+    <item
+        dex="/Users/Keith/Dropbox/Project/java/Current/MaterialWidget/sample/build/intermediates/pre-dexed/debug/classes-a5c429b466af0b0cb9c951ed3266db69a6a623ba.jar"
+        jar="/Users/Keith/Dropbox/Project/java/Current/MaterialWidget/sample/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.0.1"
+        sha1="686344a780033e4ba22b926cd225f8d4941247e6"/>
+    <item
+        dex="/Users/Keith/Dropbox/Project/java/Current/MaterialWidget/sample/build/intermediates/pre-dexed/debug/nineoldandroids-2.4.0-b7819f46093e2b587506c83cded75273e5edee62.jar"
+        jar="/Users/Keith/Dropbox/Project/java/Current/MaterialWidget/sample/build/intermediates/exploded-aar/MaterialWidget/library/unspecified/libs/nineoldandroids-2.4.0.jar"
+        jumboMode="false"
+        revision="21.0.1"
+        sha1="59f19e43354d32de831379c23ce03bb259a4c2b7"/>
+    <item
+        dex="/Users/Keith/Dropbox/Project/java/Current/MaterialWidget/sample/build/intermediates/pre-dexed/debug/classes-308efa4ee4849ec3ed74d01444f36131904c158c.jar"
+        jar="/Users/Keith/Dropbox/Project/java/Current/MaterialWidget/sample/build/intermediates/exploded-aar/MaterialWidget/library/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.0.1"
+        sha1="b11789b5e338c916e60f3f7342b5fc7981f5ef96"/>
+    <item
+        dex="/Users/Keith/Dropbox/Project/java/Current/MaterialWidget/sample/build/intermediates/pre-dexed/debug/internal_impl-21.0.0-63e358d0f9eeab3d6da8d10740453a984c6a23b7.jar"
+        jar="/Users/Keith/Dropbox/Project/java/Current/MaterialWidget/sample/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/libs/internal_impl-21.0.0.jar"
+        jumboMode="false"
+        revision="21.0.1"
+        sha1="1609e6d42d0480b0f4188e2c29f75388fa12a8f0"/>
+
+</pre-dex-items>

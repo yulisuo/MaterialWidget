@@ -78,7 +78,7 @@ public class CheckBox extends CompoundButton {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int size;
         int widthSpecMode = MeasureSpec.getMode(widthMeasureSpec);
-        int widthSpecSize = MeasureSpec.getSize(heightMeasureSpec);
+        int widthSpecSize = MeasureSpec.getSize(widthMeasureSpec);
         if (widthSpecMode == MeasureSpec.EXACTLY) {
             if (widthSpecSize < mCheckBoxWidth) {
                 size = mCheckBoxWidth;

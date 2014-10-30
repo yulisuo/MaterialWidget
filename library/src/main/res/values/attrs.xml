@@ -61,4 +61,29 @@
         <attr name="circular_progress_max" format="integer"/>
         <attr name="circular_progress_duration" format="integer"/>
     </declare-styleable>
+
+    <!-- LinearProgress Attribute -->
+    <declare-styleable name="LinearProgress">
+        <attr name="linear_progress_color" format="color"/>
+        <attr name="linear_progress_line_width" format="dimension"/>
+        <attr name="linear_progress_max" format="integer"/>
+        <attr name="linear_progress_duration" format="integer"/>
+    </declare-styleable>
+
+    <!-- Slider Attribute -->
+    <declare-styleable name="Slider">
+        <attr name="slider_color" format="color"/>
+        <attr name="slider_track_color" format="color"/>
+        <attr name="slider_ripple_color" format="color"/>
+        <attr name="slider_track_height" format="dimension"/>
+        <attr name="slider_max" format="integer"/>
+    </declare-styleable>
+
+    <!-- FloatingEditText Attribute -->
+    <declare-styleable name="FloatingEditText">
+        <attr name="floating_edit_text_text_color" format="color"/>
+        <attr name="floating_edit_text_color" format="color"/>
+        <attr name="floating_edit_text_selected_color" format="color"/>
+        <attr name="floating_edit_text_underline_height" format="dimension"/>
+    </declare-styleable>
 </resources>

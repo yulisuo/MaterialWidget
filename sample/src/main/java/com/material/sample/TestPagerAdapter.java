@@ -13,7 +13,7 @@ import com.material.widget.TabIndicator;
  */
 public class TestPagerAdapter extends FragmentPagerAdapter implements TabIndicator.TabResourceProvider {
 
-    protected static final String[] CONTENT = new String[]{"PAGE01", "PAGE02", "PAGE03", "PAGE04", "PAGE05", "PAGE06"};
+    protected static final String[] CONTENT = new String[]{"PAGE01", "PAGE02", "PAGE03", "PAGE04"};
 
     private int mCount = CONTENT.length;
 
@@ -24,7 +24,10 @@ public class TestPagerAdapter extends FragmentPagerAdapter implements TabIndicat
     @Override
     public Fragment getItem(int position) {
         if (position == 0) {
-            return new WidgetFragment();
+            return WidgetFragment.newInstance(R.layout.widget_layout1);
+        }
+        if (position == 1) {
+            return WidgetFragment.newInstance(R.layout.widget_layout2);
         } else {
             return TestFragment.newInstance(CONTENT[position]);
         }

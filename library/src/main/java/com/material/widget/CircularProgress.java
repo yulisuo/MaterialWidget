@@ -27,9 +27,11 @@ public class CircularProgress extends View {
     private boolean mIndeterminate;
     private int mBorderWidth;
     private RectF arcRectF;
-    private int mDuration;
     private int mMax;
     private int mProgress;
+    private int mDuration;
+    private boolean mHasAnimation;
+    private boolean mAttached;
 
     private Paint arcPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
@@ -60,6 +62,14 @@ public class CircularProgress extends View {
         arcPaint.setStrokeWidth(mBorderWidth);
     }
 
+    private void startAnimation() {
+
+    }
+
+    private void stopAnimation() {
+
+    }
+
     public synchronized int getProgress() {
         return mIndeterminate ? 0 : mProgress;
     }
@@ -81,7 +91,7 @@ public class CircularProgress extends View {
             }
         }
     }
-    
+
     public synchronized final void incrementProgressBy(int diff) {
         setProgress(mProgress + diff);
     }
@@ -164,10 +174,18 @@ public class CircularProgress extends View {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+        if (mIndeterminate) {
+            startAnimation();
+        }
+        mAttached = true;
     }
 
     @Override
     protected void onDetachedFromWindow() {
+        if (mIndeterminate) {
+            stopAnimation();
+        }
         super.onDetachedFromWindow();
+        mAttached = false;
     }
 }
