@@ -101,6 +101,23 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
 
         linePaint.setStyle(Paint.Style.FILL);
     }
+    
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        notifyDataSetChanged();
+
+        final int mTmpIndex = pager.getCurrentItem();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                TabIndicator.this.animatedSelectCurrentTab(mTmpIndex);
+            }
+        },100);
+
+    }
 
     public void setOnPageChangeListener(OnPageChangeListener listener) {
         this.mOnPageChangeListener = listener;
