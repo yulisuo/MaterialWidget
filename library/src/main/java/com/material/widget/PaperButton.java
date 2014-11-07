@@ -141,6 +141,11 @@ public class PaperButton extends View {
         textPaint.setColor(mTextColor);
         invalidate();
     }
+    
+    public void setText(String text){
+        mText = text;
+        invalidate();
+    }
 
     private RectF getRectF() {
         if (backgroundRectF == null) {

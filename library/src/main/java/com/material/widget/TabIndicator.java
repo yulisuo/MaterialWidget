@@ -57,6 +57,7 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
     private List<TabView> mTabList = new ArrayList<TabView>();
     private Paint linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint ripplePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private ActionMode mActionMode;
 
     public TabIndicator(Context context) {
         this(context, null);
@@ -101,6 +102,25 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
         attributes.recycle();
 
         linePaint.setStyle(Paint.Style.FILL);
+    }
+    
+      @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if(pager != null) {
+            notifyDataSetChanged();
+
+            final int mTmpIndex = pager.getCurrentItem();
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    TabIndicator.this.animatedSelectCurrentTab(mTmpIndex);
+                }
+            }, 100);
+        }
+
     }
 
     // TODO programmatically change max column
@@ -790,6 +810,11 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
         }
 
     }
+    
+    public void setActionMode(ActionMode mActionMode){
+        this.mActionMode = mActionMode;
+        pager.setOnPageChangeListener(mPageListener);
+    }
 
     private class PageListener implements OnPageChangeListener {
 
@@ -815,6 +840,8 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
 
         @Override
         public void onPageSelected(int position) {
+            if(mActionMode!=null) mActionMode.finish();
+            
             TabIndicator.this.animatedSelectCurrentTab(position);
             if (mOnPageChangeListener != null) {
                 mOnPageChangeListener.onPageSelected(position);
