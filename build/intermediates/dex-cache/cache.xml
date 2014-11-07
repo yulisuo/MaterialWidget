@@ -24,7 +24,7 @@
         jar="/Users/Keith/Dropbox/Project/java/Current/MaterialWidget/sample/build/intermediates/exploded-aar/MaterialWidget/library/unspecified/classes.jar"
         jumboMode="false"
         revision="21.0.1"
-        sha1="b11789b5e338c916e60f3f7342b5fc7981f5ef96"/>
+        sha1="f97a366203705d5aaaa15a734e75da8e11c40640"/>
     <item
         dex="/Users/Keith/Dropbox/Project/java/Current/MaterialWidget/sample/build/intermediates/pre-dexed/debug/internal_impl-21.0.0-63e358d0f9eeab3d6da8d10740453a984c6a23b7.jar"
         jar="/Users/Keith/Dropbox/Project/java/Current/MaterialWidget/sample/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/libs/internal_impl-21.0.0.jar"

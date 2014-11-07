@@ -11,9 +11,9 @@ import com.material.widget.TabIndicator;
  * Date: 14-9-24.
  * Time: 16:10.
  */
-public class TestPagerAdapter extends FragmentPagerAdapter implements TabIndicator.TabResourceProvider {
+public class TestPagerAdapter extends FragmentPagerAdapter implements TabIndicator.TabTextProvider {
 
-    protected static final String[] CONTENT = new String[]{"PAGE01", "PAGE02", "PAGE03", "PAGE04"};
+    protected static final String[] CONTENT = new String[]{"PAGE01", "PAGE02", "PAGE03", "PAGE04", "PAGE05"};
 
     private int mCount = CONTENT.length;
 

@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -29,7 +30,7 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
 
     private static final String TAG = TabIndicator.class.getSimpleName();
 
-    private static final long ANIMATION_DURATION = 200;
+    private static final long ANIMATION_DURATION = 150;
     private static final int StateNormal = 1;
     private static final int StateTouchDown = 2;
     private static final int StateTouchUp = 3;
@@ -102,6 +103,54 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
         linePaint.setStyle(Paint.Style.FILL);
     }
 
+    // TODO programmatically change max column
+    public void setMaxColumn(int column) {
+        this.mMaxColumn = column;
+    }
+
+    // TODO programmatically set current tab index
+    public void setCurrentIndex(int index) {
+
+    }
+
+    // TODO programmatically set underline height
+    public void setUnderLineHeight(int pixel) {
+        this.mUnderLineHeight = pixel;
+    }
+
+    public void setTextColor(int color) {
+        this.mTextColor = color;
+        invalidate();
+        for (TabView tabView : mTabList) {
+            tabView.setTextColor(mTextColor);
+        }
+        setTextSelectedColor(mTextSelectedColor);
+        invalidate();
+    }
+
+    public void setTextSelectedColor(int color) {
+        this.mTextSelectedColor = color;
+        if (mCurrentTab != null) {
+            mCurrentTab.setTextColor(mTextSelectedColor);
+        }
+        invalidate();
+    }
+
+    // TODO disable tab indicator
+    public void setTextDisabledColor(int color) {
+        this.mTextDisabledColor = color;
+    }
+
+    public void setRippleColor(int color) {
+        this.mRippleColor = color;
+        invalidate();
+    }
+
+    public void setUnderLineColor(int color) {
+        this.mUnderLineColor = color;
+        invalidate();
+    }
+
     public void setOnPageChangeListener(OnPageChangeListener listener) {
         this.mOnPageChangeListener = listener;
     }
@@ -121,7 +170,7 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
         mNavButtonList = new ArrayList<NavButton>();
         mTabList = new ArrayList<TabView>();
         mCurrentIndex = 0;
-        if (pager.getAdapter() instanceof TabResourceProvider) {
+        if (pager.getAdapter() instanceof TabTextProvider) {
             layoutTabItem();
         }
     }
@@ -136,7 +185,7 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
                 } else {
                     getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
-                TabResourceProvider provider = (TabResourceProvider) pager.getAdapter();
+                TabTextProvider provider = (TabTextProvider) pager.getAdapter();
                 int itemWidth = getMeasuredWidth() / mMaxColumn;
                 if (tabCount <= mMaxColumn) {
                     firstIndexSet = new int[]{0};
@@ -354,14 +403,16 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
         void onNav(NavButton button);
     }
 
-    public interface TabResourceProvider {
+    public interface TabTextProvider {
 
         public String getText(int position);
-
-        // public int getIcon(int position);
     }
 
+    // ================================================== Tab container =========================================== //
+
     private class TabContainer extends LinearLayout {
+
+        private long mStartTime;
 
         public TabContainer(Context context) {
             this(context, null);
@@ -374,6 +425,11 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
         public TabContainer(Context context, AttributeSet attrs, int defStyle) {
             super(context, attrs, defStyle);
             setWillNotDraw(false);
+        }
+
+        // TODO animate underline to selected tab
+        public void animateToSelectedTab(int lastIndex, int currentIndex) {
+
         }
 
         @Override
@@ -410,8 +466,17 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
         }
     }
 
+    // ================================================== Tab item view =========================================== //
+
     private class TabView extends Button {
 
+        private static final int StateRippleNormal = 0;
+        private static final int StateRippleTriggerStart = 1;
+        private static final int StateRippleTriggerEnd = 2;
+        private static final int StateRippleProliferationStart = 3;
+        private static final int StateRippleProliferationEnd = 4;
+        private int mRippleState = StateRippleNormal;
+        private int mState = StateNormal;
         private int index;
         private int mTabWidth;
         private int mEndRadius;
@@ -454,6 +519,7 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
                     mFingerRect = new Rect(getLeft(), getTop(), getRight(), getBottom());
                     mTouchPoint.set(Math.round(event.getX()), Math.round(event.getY()));
                     mState = StateTouchDown;
+                    mRippleState = StateRippleTriggerStart;
                     mStartTime = System.currentTimeMillis();
                     invalidate();
                     break;
@@ -462,6 +528,7 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
                             getTop() + (int) event.getY())) {
                         mMoveOutside = true;
                         mState = StateNormal;
+                        mRippleState = StateRippleNormal;
                         mStartTime = System.currentTimeMillis();
                         invalidate();
                     }
@@ -469,9 +536,11 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
                 case MotionEvent.ACTION_UP:
                     if (!mMoveOutside) {
                         mState = StateTouchUp;
-                        mStartTime = System.currentTimeMillis();
-                        invalidate();
-                        performSelectAction();
+                        if (mRippleState == StateRippleTriggerEnd) {
+                            mRippleState = StateRippleProliferationStart;
+                            mStartTime = System.currentTimeMillis();
+                            invalidate();
+                        }
                     }
                     break;
             }
@@ -484,21 +553,22 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
             ripplePaint.setColor(mRippleColor);
             int radius = 0;
             long elapsed = System.currentTimeMillis() - mStartTime;
-            switch (mState) {
-                case StateTouchDown: {
-                    ripplePaint.setAlpha(100);
+            switch (mRippleState) {
+                case StateRippleTriggerStart: {
+                    ripplePaint.setAlpha(120);
                     if (elapsed < ANIMATION_DURATION) {
                         radius = Math.round(elapsed * getWidth() / 2 / ANIMATION_DURATION);
                         postInvalidate();
                     } else {
                         radius = getWidth() / 2;
+                        mRippleState = StateRippleTriggerEnd;
                     }
                     mEndRadius = radius;
                 }
                 break;
-                case StateTouchUp: {
+                case StateRippleProliferationStart: {
                     if (elapsed < ANIMATION_DURATION) {
-                        int alpha = Math.round((ANIMATION_DURATION - elapsed) * 100 / ANIMATION_DURATION);
+                        int alpha = Math.round((ANIMATION_DURATION - elapsed) * 120 / ANIMATION_DURATION);
                         ripplePaint.setAlpha(alpha);
                         radius = mEndRadius + Math.round(elapsed * getWidth() / 2 / ANIMATION_DURATION);
                         postInvalidate();
@@ -507,14 +577,29 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
                         radius = 0;
                         mState = StateNormal;
                         postInvalidate();
+                        mRippleState = StateRippleProliferationEnd;
                     }
                 }
                 break;
-                case StateNormal:
+                case StateRippleNormal:
                     radius = 0;
                     break;
             }
             canvas.drawCircle(mTouchPoint.x, mTouchPoint.y, radius, ripplePaint);
+            switch (mRippleState) {
+                case StateRippleTriggerEnd:
+                    if (mState == StateTouchUp) {
+                        mRippleState = StateRippleProliferationStart;
+                        mStartTime = System.currentTimeMillis();
+                        invalidate();
+                    }
+                    break;
+                case StateRippleProliferationEnd:
+                    performSelectAction();
+                    mState = StateNormal;
+                    mRippleState = StateRippleNormal;
+                    break;
+            }
         }
 
         public int getIndex() {
@@ -537,15 +622,22 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
             this.mTabWidth = width;
         }
 
-        private int mState = StateNormal;
-
-
     }
+
+    // =============================================== Navigation button ========================================== //
 
     private class NavButton extends ImageButton {
 
+        private static final int StateRippleNormal = 0;
+        private static final int StateRippleTriggerStart = 1;
+        private static final int StateRippleTriggerEnd = 2;
+        private static final int StateRippleProliferationStart = 3;
+        private static final int StateRippleProliferationEnd = 4;
+        private int mRippleState = StateRippleNormal;
+
         public static final int FORWARD = 1;
         public static final int BACKWARD = 2;
+        private int mState = StateNormal;
         private int index;
         private int mType;
         private int mEndRadius;
@@ -586,6 +678,7 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
                     mMoveOutside = false;
                     mFingerRect = new Rect(getLeft(), getTop(), getRight(), getBottom());
                     mState = StateTouchDown;
+                    mRippleState = StateRippleTriggerStart;
                     mStartTime = System.currentTimeMillis();
                     invalidate();
                     break;
@@ -594,6 +687,7 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
                             getTop() + (int) event.getY())) {
                         mMoveOutside = true;
                         mState = StateNormal;
+                        mRippleState = StateRippleNormal;
                         mStartTime = System.currentTimeMillis();
                         invalidate();
                     }
@@ -601,9 +695,11 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
                 case MotionEvent.ACTION_UP:
                     if (!mMoveOutside) {
                         mState = StateTouchUp;
-                        mStartTime = System.currentTimeMillis();
-                        invalidate();
-                        performNavAction();
+                        if (mRippleState == StateRippleTriggerEnd) {
+                            mRippleState = StateRippleProliferationStart;
+                            mStartTime = System.currentTimeMillis();
+                            invalidate();
+                        }
                     }
                     break;
             }
@@ -616,37 +712,53 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
             ripplePaint.setColor(mRippleColor);
             int radius = 0;
             long elapsed = System.currentTimeMillis() - mStartTime;
-            switch (mState) {
-                case StateTouchDown: {
-                    ripplePaint.setAlpha(100);
+            switch (mRippleState) {
+                case StateRippleTriggerStart: {
+                    ripplePaint.setAlpha(120);
                     if (elapsed < ANIMATION_DURATION) {
-                        radius = Math.round(elapsed * getHeight() / 2 / ANIMATION_DURATION);
+                        radius = Math.round(elapsed * getWidth() / 2 / ANIMATION_DURATION);
                         postInvalidate();
                     } else {
-                        radius = getHeight() / 2;
+                        radius = getWidth() / 2;
+                        mRippleState = StateRippleTriggerEnd;
                     }
                     mEndRadius = radius;
                 }
                 break;
-                case StateTouchUp: {
+                case StateRippleProliferationStart: {
                     if (elapsed < ANIMATION_DURATION) {
-                        int alpha = Math.round((ANIMATION_DURATION - elapsed) * 100 / ANIMATION_DURATION);
+                        int alpha = Math.round((ANIMATION_DURATION - elapsed) * 120 / ANIMATION_DURATION);
                         ripplePaint.setAlpha(alpha);
-                        radius = mEndRadius + Math.round(elapsed * getHeight() / 2 / ANIMATION_DURATION);
+                        radius = mEndRadius + Math.round(elapsed * getWidth() / 2 / ANIMATION_DURATION);
                         postInvalidate();
                     } else {
                         ripplePaint.setAlpha(0);
                         radius = 0;
                         mState = StateNormal;
                         postInvalidate();
+                        mRippleState = StateRippleProliferationEnd;
                     }
                 }
                 break;
-                case StateNormal:
+                case StateRippleNormal:
                     radius = 0;
                     break;
             }
             canvas.drawCircle(getWidth() / 2, getHeight() / 2, radius, ripplePaint);
+            switch (mRippleState) {
+                case StateRippleTriggerEnd:
+                    if (mState == StateTouchUp) {
+                        mRippleState = StateRippleProliferationStart;
+                        mStartTime = System.currentTimeMillis();
+                        invalidate();
+                    }
+                    break;
+                case StateRippleProliferationEnd:
+                    performNavAction();
+                    mState = StateNormal;
+                    mRippleState = StateRippleNormal;
+                    break;
+            }
         }
 
         public void setOnNavListener(OnNavListener listener) {
@@ -677,17 +789,27 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
             }
         }
 
-        private int mState = StateNormal;
-
-
     }
 
     private class PageListener implements OnPageChangeListener {
 
+        private static final float thresholdOffset = 0.5f;
+        private boolean scrollStarted, checkDirection;
+
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            Log.v(TAG, "CurrentPage:" + pager.getCurrentItem());
+            Log.v(TAG, "PageWillDisplay:" + position);
             if (mOnPageChangeListener != null) {
                 mOnPageChangeListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
+            }
+            if (checkDirection) {
+                if (thresholdOffset > positionOffset) {
+                    Log.i(TAG, "going left");
+                } else {
+                    Log.i(TAG, "going right");
+                }
+                checkDirection = false;
             }
         }
 
@@ -703,6 +825,12 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
         public void onPageScrollStateChanged(int state) {
             if (mOnPageChangeListener != null) {
                 mOnPageChangeListener.onPageScrollStateChanged(state);
+            }
+            if (!scrollStarted && state == ViewPager.SCROLL_STATE_DRAGGING) {
+                scrollStarted = true;
+                checkDirection = true;
+            } else {
+                scrollStarted = false;
             }
         }
     }

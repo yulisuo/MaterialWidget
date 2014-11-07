@@ -1,14 +1,9 @@
 package com.material.widget;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 /**
  * Created by IntelliJ IDEA.
@@ -16,46 +11,32 @@ import android.widget.TextView;
  * Date: 14-10-30.
  * Time: 15:57.
  */
-public class FloatingEditText extends RelativeLayout {
+public class FloatingEditText extends EditText {
 
-    private TextView mFloatingText;
-    private EditText mEditText;
-    private View mUnderLineView;
-
-    public FloatingEditText(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
+    private int mTextColor;
+    private int mTextSize;
+    private int mNormalColor;
+    private int mHighlightedColor;
+    private int mUnderlineHeight;
+    private int mUnderlineHighlightedHeight;
 
     public FloatingEditText(Context context) {
-        super(context);
-        init();
+        this(context, null);
+    }
+
+    public FloatingEditText(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
     }
 
     public FloatingEditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
-    }
+        TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.FloatingEditText);
+        mHighlightedColor = attributes.getColor(R.styleable.FloatingEditText_floating_edit_text_highlighted_color,
+                getResources().getColor(R.color.floating_edit_text_highlighted_color));
+        mUnderlineHeight = attributes.getDimensionPixelSize(R.styleable.FloatingEditText_floating_edit_text_underline_height,
+                getResources().getDimensionPixelSize(R.dimen.floating_edit_text_underline_height));
+        mUnderlineHighlightedHeight = attributes.getDimensionPixelSize(R.styleable.FloatingEditText_floating_edit_text_underline_highlighted_height,
+                getResources().getDimensionPixelSize(R.dimen.floating_edit_text_underline_highlighted_height));
 
-    private void init() {
-        mFloatingText = new TextView(getContext());
-        mFloatingText.setText("Floating text");
-        mFloatingText.setGravity(Gravity.CENTER_VERTICAL);
-        mFloatingText.setBackgroundColor(Color.GREEN);
-        addView(mFloatingText, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-
-        mEditText = new EditText(getContext());
-        mEditText.setBackgroundColor(Color.TRANSPARENT);
-        addView(mEditText, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-
-        mUnderLineView = new View(getContext());
-        mUnderLineView.setBackgroundColor(Color.RED);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                LayoutParams.MATCH_PARENT,
-                20);
-        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        addView(mUnderLineView, params);
     }
 }

@@ -81,9 +81,8 @@
 
     <!-- FloatingEditText Attribute -->
     <declare-styleable name="FloatingEditText">
-        <attr name="floating_edit_text_text_color" format="color"/>
-        <attr name="floating_edit_text_color" format="color"/>
-        <attr name="floating_edit_text_selected_color" format="color"/>
+        <attr name="floating_edit_text_highlighted_color" format="color"/>
         <attr name="floating_edit_text_underline_height" format="dimension"/>
+        <attr name="floating_edit_text_underline_highlighted_height" format="dimension"/>
     </declare-styleable>
 </resources>

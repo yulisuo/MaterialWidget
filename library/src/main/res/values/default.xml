@@ -88,4 +88,7 @@
     <dimen name="slider_track_height">2dp</dimen>
 
     <!-- FloatingEditText Default -->
+    <color name="floating_edit_text_highlighted_color">#03a9f4</color>
+    <dimen name="floating_edit_text_underline_height">1dp</dimen>
+    <dimen name="floating_edit_text_underline_highlighted_height">2dp</dimen>
 </resources>
