@@ -2,6 +2,7 @@ package com.material.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.widget.EditText;
 
@@ -12,6 +13,8 @@ import android.widget.EditText;
  * Time: 15:57.
  */
 public class FloatingEditText extends EditText {
+
+    private static final int ANIMATION_DURATION = 150;
 
     private int mTextColor;
     private int mTextSize;
@@ -38,5 +41,17 @@ public class FloatingEditText extends EditText {
         mUnderlineHighlightedHeight = attributes.getDimensionPixelSize(R.styleable.FloatingEditText_floating_edit_text_underline_highlighted_height,
                 getResources().getDimensionPixelSize(R.dimen.floating_edit_text_underline_highlighted_height));
 
+    }
+
+    @Override
+    protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
+        super.onFocusChanged(focused, direction, previouslyFocusedRect);
+        if (focused)
+        {
+
+        }
+        else {
+
+        }
     }
 }

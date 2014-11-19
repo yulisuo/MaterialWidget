@@ -3,15 +3,17 @@ package com.material.widget;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.*;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
+import android.view.ActionMode;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.ViewTreeObserver;
@@ -103,11 +105,11 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
 
         linePaint.setStyle(Paint.Style.FILL);
     }
-    
-      @Override
+
+    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if(pager != null) {
+        if (pager != null) {
             notifyDataSetChanged();
 
             final int mTmpIndex = pager.getCurrentItem();
@@ -555,6 +557,7 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
                     break;
                 case MotionEvent.ACTION_UP:
                     if (!mMoveOutside) {
+                        performSelectAction();
                         mState = StateTouchUp;
                         if (mRippleState == StateRippleTriggerEnd) {
                             mRippleState = StateRippleProliferationStart;
@@ -615,7 +618,6 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
                     }
                     break;
                 case StateRippleProliferationEnd:
-                    performSelectAction();
                     mState = StateNormal;
                     mRippleState = StateRippleNormal;
                     break;
@@ -714,6 +716,7 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
                     break;
                 case MotionEvent.ACTION_UP:
                     if (!mMoveOutside) {
+                        performNavAction();
                         mState = StateTouchUp;
                         if (mRippleState == StateRippleTriggerEnd) {
                             mRippleState = StateRippleProliferationStart;
@@ -774,7 +777,6 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
                     }
                     break;
                 case StateRippleProliferationEnd:
-                    performNavAction();
                     mState = StateNormal;
                     mRippleState = StateRippleNormal;
                     break;
@@ -810,38 +812,25 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
         }
 
     }
-    
-    public void setActionMode(ActionMode mActionMode){
+
+    public void setActionMode(ActionMode mActionMode) {
         this.mActionMode = mActionMode;
         pager.setOnPageChangeListener(mPageListener);
     }
 
     private class PageListener implements OnPageChangeListener {
 
-        private static final float thresholdOffset = 0.5f;
-        private boolean scrollStarted, checkDirection;
-
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            Log.v(TAG, "CurrentPage:" + pager.getCurrentItem());
-            Log.v(TAG, "PageWillDisplay:" + position);
             if (mOnPageChangeListener != null) {
                 mOnPageChangeListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
             }
-            if (checkDirection) {
-                if (thresholdOffset > positionOffset) {
-                    Log.i(TAG, "going left");
-                } else {
-                    Log.i(TAG, "going right");
-                }
-                checkDirection = false;
-            }
+            // TODO Scroll indicator animated
         }
 
         @Override
         public void onPageSelected(int position) {
-            if(mActionMode!=null) mActionMode.finish();
-            
+            if (mActionMode != null) mActionMode.finish();
             TabIndicator.this.animatedSelectCurrentTab(position);
             if (mOnPageChangeListener != null) {
                 mOnPageChangeListener.onPageSelected(position);
@@ -852,12 +841,6 @@ public class TabIndicator extends HorizontalScrollView implements Animator.Anima
         public void onPageScrollStateChanged(int state) {
             if (mOnPageChangeListener != null) {
                 mOnPageChangeListener.onPageScrollStateChanged(state);
-            }
-            if (!scrollStarted && state == ViewPager.SCROLL_STATE_DRAGGING) {
-                scrollStarted = true;
-                checkDirection = true;
-            } else {
-                scrollStarted = false;
             }
         }
     }
