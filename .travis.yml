@@ -12,5 +12,4 @@ before_install:
   # for gradle output style
   - export TERM=dumb
 
-# Let's try to build...
-script: ./gradlew clean build
+script: gradle build connectedCheck
