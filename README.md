@@ -1,7 +1,9 @@
 MaterialWidget
 ==============
 
-Android L design widget in Android 4.0 ~ 4.4.
+Android Lollipop design widget in Android 4.0 ~ 4.4.
+
+[![Build Status](https://travis-ci.org/keithellis/MaterialWidget.svg?branch=master)](https://travis-ci.org/keithellis/MaterialWidget)
 
 ## Screenshot ##
 

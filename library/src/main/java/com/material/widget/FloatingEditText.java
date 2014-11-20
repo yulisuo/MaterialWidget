@@ -2,10 +2,9 @@ package com.material.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
+import android.graphics.*;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -26,8 +25,6 @@ public class FloatingEditText extends EditText {
 
     private int mState = StateHintNormal;
     private long mStartTime;
-    private int mTextColor;
-    private int mTextSize;
     private int mColor;
     private int mHighlightedColor;
     private int mUnderlineHeight;
@@ -48,7 +45,7 @@ public class FloatingEditText extends EditText {
 
     public FloatingEditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, android.R.attr.editTextStyle);
-        setBackgroundColor(Color.TRANSPARENT);
+        //setBackgroundColor(Color.TRANSPARENT);
         TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.FloatingEditText);
         mColor = attributes.getColor(R.styleable.FloatingEditText_floating_edit_text_color,
                 getResources().getColor(R.color.floating_edit_text_color));
@@ -62,6 +59,47 @@ public class FloatingEditText extends EditText {
         mTextEmpty = TextUtils.isEmpty(getText());
         mHintPaint = new Paint();
         mHintPaint.setAntiAlias(true);
+
+        Drawable drawable = new Drawable() {
+            @Override
+            public void draw(Canvas canvas) {
+                if (isFocused()) {
+                    lineRect.left = 0;
+                    lineRect.top = canvas.getHeight()- mUnderlineHighlightedHeight;
+                    lineRect.right = getWidth();
+                    lineRect.bottom = canvas.getHeight();
+                    mHintPaint.setColor(mHighlightedColor);
+                    canvas.drawRect(lineRect, mHintPaint);
+                } else {
+                    lineRect.left = 0;
+                    lineRect.top = canvas.getHeight() - mUnderlineHeight;
+                    lineRect.right = getWidth();
+                    lineRect.bottom = canvas.getHeight();
+                    mHintPaint.setColor(mColor);
+                    canvas.drawRect(lineRect, mHintPaint);
+                }
+            }
+
+            @Override
+            public void setAlpha(int alpha) {
+                mHintPaint.setAlpha(alpha);
+            }
+
+            @Override
+            public void setColorFilter(ColorFilter colorFilter) {
+                mHintPaint.setColorFilter(colorFilter);
+            }
+
+            @Override
+            public int getOpacity() {
+                return PixelFormat.TRANSPARENT;
+            }
+        };
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            setBackgroundDrawable(drawable);
+        } else {
+            setBackground(drawable);
+        }
     }
 
     @Override
@@ -137,21 +175,6 @@ public class FloatingEditText extends EditText {
                 }
                 break;
             }
-        }
-        if (isFocused()) {
-            lineRect.left = 0;
-            lineRect.top = getHeight() - mUnderlineHighlightedHeight;
-            lineRect.right = getWidth();
-            lineRect.bottom = getHeight();
-            mHintPaint.setColor(mHighlightedColor);
-            canvas.drawRect(lineRect, mHintPaint);
-        } else {
-            lineRect.left = 0;
-            lineRect.top = getHeight() - mUnderlineHeight;
-            lineRect.right = getWidth();
-            lineRect.bottom = getHeight();
-            mHintPaint.setColor(mColor);
-            canvas.drawRect(lineRect, mHintPaint);
         }
     }
 }

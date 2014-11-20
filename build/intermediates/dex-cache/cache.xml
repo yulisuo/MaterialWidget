@@ -8,11 +8,11 @@
         revision="21.0.1"
         sha1="1a578b9607b36266c63d43a4fa0ab5664dbe911e"/>
     <item
-        dex="/Users/keith/Dropbox/Project/java/Current/MaterialWidget/sample/build/intermediates/pre-dexed/debug/library-2.4.0-da3c6fee0a83023e8da5a2e22ba97ce7d083e3bd.jar"
-        jar="/Users/keith/.gradle/caches/modules-2/files-2.1/com.nineoldandroids/library/2.4.0/e9b63380f3a242dbdbf103a2355ad7e43bad17cb/library-2.4.0.jar"
+        dex="/Users/keith/Dropbox/Project/java/Current/MaterialWidget/sample/build/intermediates/pre-dexed/debug/classes-cbfec4353f22df163a808f3228341ef2d16815dd.jar"
+        jar="/Users/keith/Dropbox/Project/java/Current/MaterialWidget/sample/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/classes.jar"
         jumboMode="false"
         revision="21.0.1"
-        sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb"/>
+        sha1="686344a780033e4ba22b926cd225f8d4941247e6"/>
     <item
         dex="/Users/keith/Dropbox/Project/java/Current/MaterialWidget/sample/build/intermediates/pre-dexed/debug/internal_impl-21.0.0-61642d7e3c9dace5e36d0e981673bf20fc2a698c.jar"
         jar="/Users/keith/Dropbox/Project/java/Current/MaterialWidget/sample/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/libs/internal_impl-21.0.0.jar"
@@ -20,16 +20,10 @@
         revision="21.0.1"
         sha1="1609e6d42d0480b0f4188e2c29f75388fa12a8f0"/>
     <item
-        dex="/Users/keith/Dropbox/Project/java/Current/MaterialWidget/sample/build/intermediates/pre-dexed/debug/classes-cbfec4353f22df163a808f3228341ef2d16815dd.jar"
-        jar="/Users/keith/Dropbox/Project/java/Current/MaterialWidget/sample/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/classes.jar"
-        jumboMode="false"
-        revision="21.0.1"
-        sha1="686344a780033e4ba22b926cd225f8d4941247e6"/>
-    <item
         dex="/Users/keith/Dropbox/Project/java/Current/MaterialWidget/sample/build/intermediates/pre-dexed/debug/classes-258118a599613748c90c50c32b1316966c751a36.jar"
         jar="/Users/keith/Dropbox/Project/java/Current/MaterialWidget/sample/build/intermediates/exploded-aar/MaterialWidget/library/unspecified/classes.jar"
         jumboMode="false"
         revision="21.0.1"
-        sha1="dee5cb385a9dbf0a25f42b85fe75f17791ad959c"/>
+        sha1="83b302349ebf60fe684a4a6a5f713ebc53fab45a"/>
 
 </pre-dex-items>
