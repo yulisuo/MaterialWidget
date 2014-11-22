@@ -234,7 +234,6 @@ public class Switch extends CompoundButton {
                 case StateNormal:
                     break;
             }
-
             thumbStrokePaint.setColor(mThumbColor);
             thumbStrokePaint.setStyle(Paint.Style.STROKE);
             thumbStrokePaint.setStrokeWidth(mStrokeWidth);

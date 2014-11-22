@@ -27,6 +27,7 @@ import java.util.List;
  * User: keith.
  * Date: 14-9-26.
  * Time: 13:39.
+ * Thanks for https://github.com/astuetz/PagerSlidingTabStrip
  */
 public class TabIndicator extends HorizontalScrollView implements Animator.AnimatorListener {
 

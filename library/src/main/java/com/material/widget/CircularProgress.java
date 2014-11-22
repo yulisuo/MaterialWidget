@@ -270,8 +270,8 @@ public class CircularProgress extends View {
         }
 
         @Override
-        public void setColorFilter(ColorFilter cf) {
-            mPaint.setColorFilter(cf);
+        public void setColorFilter(ColorFilter colorFilter) {
+            mPaint.setColorFilter(colorFilter);
         }
 
         @Override

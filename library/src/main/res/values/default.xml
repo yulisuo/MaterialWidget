@@ -76,20 +76,25 @@
     <dimen name="linear_progress_line_width">4dp</dimen>
     <integer name="linear_progress_max">100</integer>
 
-    <!-- Slider Default -->
-    <color name="slider_color">#ff3f51b5</color>
-    <color name="slider_track_color">#ffc8c8c8</color>
-    <color name="slider_ripple_color">#ffd4d4d4</color>
-    <dimen name="slider_height">48dp</dimen>
-    <dimen name="slider_thumb_radius">7dp</dimen>
-    <dimen name="slider_thumb_selected_radius">12dp</dimen>
-    <dimen name="slider_thumb_border_width">2dp</dimen>
-    <integer name="slider_max">100</integer>
-    <dimen name="slider_track_height">2dp</dimen>
-
     <!-- FloatingEditText Default -->
-    <color name="floating_edit_text_color">#ffd0d0d0</color>
-    <color name="floating_edit_text_highlighted_color">#03a9f4</color>
+    <color name="floating_edit_text_color">#ffc8c8c8</color>
+    <color name="floating_edit_text_highlighted_color">#ff3f51b5</color>
     <dimen name="floating_edit_text_underline_height">1dp</dimen>
     <dimen name="floating_edit_text_underline_highlighted_height">2dp</dimen>
+
+    <!-- Slider Default -->
+    <color name="slider_color">#ffc8c8c8</color>
+    <color name="slider_tint_color">#ff3f51b5</color>
+    <color name="slider_ripple_color">#ffd4d4d4</color>
+    <dimen name="slider_thumb_radius">10dp</dimen>
+    <dimen name="slider_thumb_ripple_radius">30dp</dimen>
+    <dimen name="slider_bar_height">2dp</dimen>
+    <dimen name="slider_thumb_border_width">2dp</dimen>
+
+    <!-- TrackSlider Default -->
+    <color name="track_slider_color">#ffc8c8c8</color>
+    <color name="track_slider_tint_color">#ff3f51b5</color>
+    <dimen name="track_slider_thumb_radius">10dp</dimen>
+    <dimen name="track_slider_ripple_radius">20dp</dimen>
+    <dimen name="track_slider_bar_height">2dp</dimen>
 </resources>

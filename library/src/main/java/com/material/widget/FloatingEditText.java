@@ -22,6 +22,7 @@ public class FloatingEditText extends EditText {
     private static final int StateHintNormal = 0;
     private static final int StateHintZoomIn = 1;
     private static final int StateHintZoomOut = 2;
+    private static final float HINT_SCALE = 0.5f;
 
     private int mState = StateHintNormal;
     private long mStartTime;
@@ -30,7 +31,7 @@ public class FloatingEditText extends EditText {
     private int mUnderlineHeight;
     private int mUnderlineHighlightedHeight;
     private boolean mTextEmpty;
-    private float mHintScale = 0.5f;
+    private float mHintScale;
     private Rect lineRect = new Rect();
 
     private Paint mHintPaint;
@@ -45,8 +46,9 @@ public class FloatingEditText extends EditText {
 
     public FloatingEditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, android.R.attr.editTextStyle);
-        //setBackgroundColor(Color.TRANSPARENT);
         TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.FloatingEditText);
+        mHintScale = attributes.getFloat(R.styleable.FloatingEditText_floating_edit_text_hint_scale,
+                HINT_SCALE);
         mColor = attributes.getColor(R.styleable.FloatingEditText_floating_edit_text_color,
                 getResources().getColor(R.color.floating_edit_text_color));
         mHighlightedColor = attributes.getColor(R.styleable.FloatingEditText_floating_edit_text_highlighted_color,
@@ -65,7 +67,7 @@ public class FloatingEditText extends EditText {
             public void draw(Canvas canvas) {
                 if (isFocused()) {
                     lineRect.left = 0;
-                    lineRect.top = canvas.getHeight()- mUnderlineHighlightedHeight;
+                    lineRect.top = canvas.getHeight() - mUnderlineHighlightedHeight;
                     lineRect.right = getWidth();
                     lineRect.bottom = canvas.getHeight();
                     mHintPaint.setColor(mHighlightedColor);
