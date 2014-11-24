@@ -5,45 +5,15 @@
               android:gravity="center"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-	<LinearLayout
-			android:gravity="center"
-			android:orientation="horizontal"
+	<com.material.widget.Switch
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content">
-		<com.material.widget.Switch
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"/>
-		<com.material.widget.Switch
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"/>
-	</LinearLayout>
-
-	<LinearLayout
-			android:gravity="center"
-			android:orientation="horizontal"
+			android:layout_height="wrap_content"/>
+	<com.material.widget.RadioButton
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content">
-		<com.material.widget.RadioButton
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"/>
-		<com.material.widget.RadioButton
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"/>
-	</LinearLayout>
-
-	<LinearLayout
-			android:gravity="center"
-			android:orientation="horizontal"
+			android:layout_height="wrap_content"/>
+	<com.material.widget.CheckBox
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content">
-		<com.material.widget.CheckBox
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"/>
-		<com.material.widget.CheckBox
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"/>
-	</LinearLayout>
-
+			android:layout_height="wrap_content"/>
 	<com.material.widget.CircleButton
 			android:id="@+id/circle_button"
 			widget:circle_icon="@drawable/ic_add"

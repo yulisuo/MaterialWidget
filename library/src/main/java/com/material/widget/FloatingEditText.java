@@ -1,6 +1,7 @@
 package com.material.widget;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
@@ -8,6 +9,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.EditText;
 
 /**
@@ -28,6 +30,9 @@ public class FloatingEditText extends EditText {
     private long mStartTime;
     private int mColor;
     private int mHighlightedColor;
+    private int mErrorColor;
+    private boolean mVerified = true;
+    private String mValidateMessage;
     private int mUnderlineHeight;
     private int mUnderlineHighlightedHeight;
     private boolean mTextEmpty;
@@ -53,6 +58,8 @@ public class FloatingEditText extends EditText {
                 getResources().getColor(R.color.floating_edit_text_color));
         mHighlightedColor = attributes.getColor(R.styleable.FloatingEditText_floating_edit_text_highlighted_color,
                 getResources().getColor(R.color.floating_edit_text_highlighted_color));
+        mErrorColor = attributes.getColor(R.styleable.FloatingEditText_floating_edit_text_error_color,
+                getResources().getColor(R.color.floating_edit_text_error_color));
         mUnderlineHeight = attributes.getDimensionPixelSize(R.styleable.FloatingEditText_floating_edit_text_underline_height,
                 getResources().getDimensionPixelSize(R.dimen.floating_edit_text_underline_height));
         mUnderlineHighlightedHeight = attributes.getDimensionPixelSize(R.styleable.FloatingEditText_floating_edit_text_underline_highlighted_height,
@@ -65,20 +72,26 @@ public class FloatingEditText extends EditText {
         Drawable drawable = new Drawable() {
             @Override
             public void draw(Canvas canvas) {
-                if (isFocused()) {
-                    lineRect.left = 0;
-                    lineRect.top = canvas.getHeight() - mUnderlineHighlightedHeight;
-                    lineRect.right = getWidth();
-                    lineRect.bottom = canvas.getHeight();
-                    mHintPaint.setColor(mHighlightedColor);
-                    canvas.drawRect(lineRect, mHintPaint);
+                if (mVerified) {
+                    if (isFocused()) {
+                        Rect rect = getThickLineRect(canvas);
+                        mHintPaint.setColor(mHighlightedColor);
+                        canvas.drawRect(rect, mHintPaint);
+                    } else {
+                        Rect rect = getThinLineRect(canvas);
+                        mHintPaint.setColor(mColor);
+                        canvas.drawRect(rect, mHintPaint);
+                    }
                 } else {
-                    lineRect.left = 0;
-                    lineRect.top = canvas.getHeight() - mUnderlineHeight;
-                    lineRect.right = getWidth();
-                    lineRect.bottom = canvas.getHeight();
-                    mHintPaint.setColor(mColor);
-                    canvas.drawRect(lineRect, mHintPaint);
+                    Rect rect = getThickLineRect(canvas);
+                    mHintPaint.setColor(mErrorColor);
+                    canvas.drawRect(rect, mHintPaint);
+
+                    mHintPaint.setColor(mErrorColor);
+                    mHintPaint.setTextSize(getTextSize() * 0.6f);
+                    float x = getCompoundPaddingLeft();
+                    float y = rect.bottom + (dpToPx(16) - mHintPaint.getFontMetricsInt().top) / 2;
+                    canvas.drawText(mValidateMessage, x, y, mHintPaint);
                 }
             }
 
@@ -102,14 +115,54 @@ public class FloatingEditText extends EditText {
         } else {
             setBackground(drawable);
         }
+        int paddingTop = dpToPx(12);
+        int paddingBottom = dpToPx(20);
+        setPadding(0, paddingTop, 0, paddingBottom);
+    }
+
+    private Rect getThinLineRect(Canvas canvas) {
+        lineRect.left = getPaddingLeft();
+        lineRect.top = canvas.getHeight() - mUnderlineHeight - dpToPx(16);
+        lineRect.right = getWidth();
+        lineRect.bottom = canvas.getHeight() - dpToPx(16);
+        return lineRect;
+    }
+
+    private Rect getThickLineRect(Canvas canvas) {
+        lineRect.left = getPaddingLeft();
+        lineRect.top = canvas.getHeight() - mUnderlineHighlightedHeight - dpToPx(16);
+        lineRect.right = getWidth();
+        lineRect.bottom = canvas.getHeight() - dpToPx(16);
+        return lineRect;
+    }
+
+    public void setNormalColor(int color) {
+        this.mColor = color;
+        invalidate();
+    }
+
+    public void setHighlightedColor(int color) {
+        this.mHighlightedColor = color;
+        invalidate();
+    }
+
+    public void setValidateResult(boolean verified, String message) {
+        if (!verified && message == null) {
+            throw new IllegalStateException("Must have a validate result message.");
+        }
+        this.mVerified = verified;
+        this.mValidateMessage = message;
+        invalidate();
     }
 
     @Override
     protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
         super.onTextChanged(text, start, lengthBefore, lengthAfter);
+        this.mVerified = true;
+        this.mValidateMessage = null;
         boolean isEmpty = TextUtils.isEmpty(getText());
         if (mTextEmpty != isEmpty) {
-            mTextEmpty = isEmpty;
+            this.mTextEmpty = isEmpty;
             if (isEmpty && isShown()) {
                 mStartTime = System.currentTimeMillis();
                 mState = StateHintZoomIn;
@@ -128,7 +181,7 @@ public class FloatingEditText extends EditText {
             float maxTextSize = getTextSize();
             float minTextSize = getTextSize() * mHintScale;
             float maxHintY = getBaseline();
-            float minHintY = getBaseline() + getPaint().getFontMetricsInt().top + getScrollY();
+            float minHintY = getBaseline() + getPaint().getFontMetricsInt().top + getScrollY() - dpToPx(4);
             float textSize;
             float hintY;
             float hintX = getCompoundPaddingLeft() + getScrollX();
@@ -170,7 +223,11 @@ public class FloatingEditText extends EditText {
                     } else {
                         textSize = minTextSize;
                         hintY = minHintY;
-                        mHintPaint.setColor(mHighlightedColor);
+                        if (isFocused()) {
+                            mHintPaint.setColor(mHighlightedColor);
+                        } else {
+                            mHintPaint.setColor(mColor);
+                        }
                         mHintPaint.setTextSize(textSize);
                         canvas.drawText(getHint().toString(), hintX, hintY, mHintPaint);
                     }
@@ -178,5 +235,9 @@ public class FloatingEditText extends EditText {
                 break;
             }
         }
+    }
+
+    public static int dpToPx(int dp) {
+        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
     }
 }
